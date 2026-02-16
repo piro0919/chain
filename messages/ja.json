@@ -9,7 +9,7 @@
   "HomePage": {
     "title": "Chain",
     "subtitle": "組織図ジェネレーター",
-    "editorPlaceholder": "マークダウン形式で組織構造を入力:\n\n- CEO\n  - CTO\n    - エンジニアA\n    - エンジニアB\n  - CFO\n    - 経理担当",
+    "editorPlaceholder": "マークダウン形式で組織構造を入力:\n\n- CEO\n  - **開発部**\n    - エンジニアA\n    - エンジニアB\n  - **経理部**\n    - 経理担当\n\n※ **太字** で部署を色分けできます",
     "preview": "プレビュー",
     "exportPng": "PNG出力",
     "exportSvg": "SVG出力",

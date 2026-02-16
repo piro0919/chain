@@ -34,24 +34,65 @@ export type OrgChartHandle = {
 };
 
 type TreeNodeDatum = RawNodeDatum & {
+  department?: string;
+  isDepartmentNode?: boolean;
   position?: string;
 };
 
-function convertNode(node: OrgNode): TreeNodeDatum {
+const DEPARTMENT_COLORS = [
+  { bg: "#eff6ff", border: "#3b82f6" }, // blue
+  { bg: "#f0fdf4", border: "#22c55e" }, // green
+  { bg: "#fefce8", border: "#eab308" }, // yellow
+  { bg: "#fdf2f8", border: "#ec4899" }, // pink
+  { bg: "#f5f3ff", border: "#8b5cf6" }, // violet
+  { bg: "#fff7ed", border: "#f97316" }, // orange
+  { bg: "#ecfeff", border: "#06b6d4" }, // cyan
+  { bg: "#fef2f2", border: "#ef4444" }, // red
+];
+
+function getDepartmentColor(
+  department: string,
+  departments: string[],
+): (typeof DEPARTMENT_COLORS)[0] {
+  const index = departments.indexOf(department);
+  return DEPARTMENT_COLORS[index % DEPARTMENT_COLORS.length];
+}
+
+function collectDepartments(nodes: OrgNode[]): string[] {
+  const departments: string[] = [];
+  function walk(node: OrgNode): void {
+    if (node.department === node.name) {
+      if (!departments.includes(node.department)) {
+        departments.push(node.department);
+      }
+    }
+    for (const child of node.children) {
+      walk(child);
+    }
+  }
+  for (const node of nodes) {
+    walk(node);
+  }
+  return departments;
+}
+
+function convertNode(node: OrgNode, departments: string[]): TreeNodeDatum {
   return {
     name: node.name,
     position: node.position,
-    children: node.children.map(convertNode),
+    department: node.department,
+    isDepartmentNode: node.department === node.name,
+    children: node.children.map((child) => convertNode(child, departments)),
   };
 }
 
-function convertToTreeData(nodes: OrgNode[]): TreeNodeDatum | null {
+function convertToTreeData(nodes: OrgNode[], departments: string[]): TreeNodeDatum | null {
   if (nodes.length === 0) return null;
-  if (nodes.length === 1) return convertNode(nodes[0]);
+  if (nodes.length === 1) return convertNode(nodes[0], departments);
 
   return {
     name: "",
-    children: nodes.map(convertNode),
+    children: nodes.map((n) => convertNode(n, departments)),
   };
 }
 
@@ -63,63 +104,107 @@ const COLORS = {
   line: "#a1a1aa",
 };
 
-function renderNode({ nodeDatum }: CustomNodeElementProps): React.ReactElement {
-  const data = nodeDatum as TreeNodeDatum;
+function createRenderNode(departments: string[]) {
+  return function renderNode({ nodeDatum }: CustomNodeElementProps): React.ReactElement {
+    const data = nodeDatum as TreeNodeDatum;
 
-  if (!data.name) {
-    return <g />;
-  }
+    if (!data.name) {
+      return <g />;
+    }
 
-  const hasPosition = Boolean(data.position);
-  const height = hasPosition ? 48 : 36;
-  const yOffset = height / 2;
+    const deptColor = data.department ? getDepartmentColor(data.department, departments) : null;
 
-  return (
-    <g>
-      <foreignObject x="-70" y={-yOffset} width="140" height={height}>
-        <div
-          style={{
-            width: "100%",
-            height: "100%",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-            backgroundColor: COLORS.bg,
-            border: `1.5px solid ${COLORS.border}`,
-            borderRadius: "4px",
-            fontFamily: "system-ui, sans-serif",
-            padding: "4px 8px",
-            boxSizing: "border-box",
-          }}
-        >
-          <span
-            style={{
-              color: COLORS.text,
-              fontSize: "13px",
-              fontWeight: 400,
-              lineHeight: 1.2,
-            }}
-          >
-            {data.name}
-          </span>
-          {hasPosition && (
-            <span
+    // Department header node: pill-shaped badge
+    if (data.isDepartmentNode && deptColor) {
+      const height = 30;
+      return (
+        <g>
+          <foreignObject x="-70" y={-height / 2} width="140" height={height}>
+            <div
               style={{
-                color: COLORS.subtext,
-                fontSize: "11px",
-                fontWeight: 400,
-                lineHeight: 1.2,
-                marginTop: "2px",
+                width: "100%",
+                height: "100%",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                backgroundColor: deptColor.border,
+                borderRadius: "15px",
+                fontFamily: "system-ui, sans-serif",
+                padding: "4px 12px",
+                boxSizing: "border-box",
               }}
             >
-              {data.position}
+              <span
+                style={{
+                  color: "#ffffff",
+                  fontSize: "12px",
+                  fontWeight: 600,
+                  lineHeight: 1.2,
+                }}
+              >
+                {data.name}
+              </span>
+            </div>
+          </foreignObject>
+        </g>
+      );
+    }
+
+    // Regular node with optional department color accent
+    const hasPosition = Boolean(data.position);
+    const height = hasPosition ? 48 : 36;
+    const yOffset = height / 2;
+
+    return (
+      <g>
+        <foreignObject x="-70" y={-yOffset} width="140" height={height}>
+          <div
+            style={{
+              width: "100%",
+              height: "100%",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+              backgroundColor: COLORS.bg,
+              border: `1.5px solid ${COLORS.border}`,
+              borderLeft: deptColor
+                ? `4px solid ${deptColor.border}`
+                : `1.5px solid ${COLORS.border}`,
+              borderRadius: "4px",
+              fontFamily: "system-ui, sans-serif",
+              padding: "4px 8px",
+              boxSizing: "border-box",
+            }}
+          >
+            <span
+              style={{
+                color: COLORS.text,
+                fontSize: "13px",
+                fontWeight: 400,
+                lineHeight: 1.2,
+              }}
+            >
+              {data.name}
             </span>
-          )}
-        </div>
-      </foreignObject>
-    </g>
-  );
+            {hasPosition && (
+              <span
+                style={{
+                  color: COLORS.subtext,
+                  fontSize: "11px",
+                  fontWeight: 400,
+                  lineHeight: 1.2,
+                  marginTop: "2px",
+                }}
+              >
+                {data.position}
+              </span>
+            )}
+          </div>
+        </foreignObject>
+      </g>
+    );
+  };
 }
 
 export const OrgChart = forwardRef<OrgChartHandle, OrgChartProps>(function OrgChart(
@@ -131,8 +216,9 @@ export const OrgChart = forwardRef<OrgChartHandle, OrgChartProps>(function OrgCh
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
   const [zoom, setZoom] = useState(1);
   const [translate, setTranslate] = useState({ x: 0, y: 60 });
-  const treeData = useMemo(() => convertToTreeData(nodes), [nodes]);
-  const renderNodeCallback = useCallback((props: CustomNodeElementProps) => renderNode(props), []);
+  const departments = useMemo(() => collectDepartments(nodes), [nodes]);
+  const treeData = useMemo(() => convertToTreeData(nodes, departments), [nodes, departments]);
+  const renderNodeCallback = useMemo(() => createRenderNode(departments), [departments]);
 
   useEffect(() => {
     const updateDimensions = () => {

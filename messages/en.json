@@ -9,7 +9,7 @@
   "HomePage": {
     "title": "Chain",
     "subtitle": "Org Chart Generator",
-    "editorPlaceholder": "Enter your organization structure in markdown format:\n\n- CEO\n  - CTO\n    - Engineer A\n    - Engineer B\n  - CFO\n    - Accountant",
+    "editorPlaceholder": "Enter your organization structure in markdown format:\n\n- CEO\n  - **Engineering**\n    - Engineer A\n    - Engineer B\n  - **Finance**\n    - Accountant\n\nUse **bold** to color-code departments",
     "preview": "Preview",
     "exportPng": "Export PNG",
     "exportSvg": "Export SVG",

@@ -1,5 +1,6 @@
 export type OrgNode = {
   children: OrgNode[];
+  department?: string;
   name: string;
   position?: string;
 };
@@ -16,20 +17,27 @@ export function parseMarkdown(markdown: string): OrgNode[] {
     const indent = match[1].length;
     const content = match[2].trim();
 
+    // Parse bold text as department marker: **Department**
+    const boldMatch = content.match(/^\*\*(.+?)\*\*(?:\s*\((.+)\))?$/);
     // Parse "Name (Position)" format
     const namePositionMatch = content.match(/^(.+?)\s*\((.+)\)$/);
 
     let name: string;
     let position: string | undefined;
+    let department: string | undefined;
 
-    if (namePositionMatch) {
+    if (boldMatch) {
+      name = boldMatch[1].trim();
+      position = boldMatch[2]?.trim();
+      department = name;
+    } else if (namePositionMatch) {
       name = namePositionMatch[1].trim();
       position = namePositionMatch[2].trim();
     } else {
       name = content;
     }
 
-    const node: OrgNode = { children: [], name, position };
+    const node: OrgNode = { children: [], department, name, position };
 
     while (stack.length > 0 && stack[stack.length - 1].indent >= indent) {
       stack.pop();
@@ -38,6 +46,10 @@ export function parseMarkdown(markdown: string): OrgNode[] {
     if (stack.length === 0) {
       root.push(node);
     } else {
+      // Inherit department from parent if not set
+      if (!node.department && stack[stack.length - 1].node.department) {
+        node.department = stack[stack.length - 1].node.department;
+      }
       stack[stack.length - 1].node.children.push(node);
     }
 

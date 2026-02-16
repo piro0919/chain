@@ -8,28 +8,31 @@ import { OrgChart } from "@/components/org-chart";
 import { parseMarkdown } from "@/lib/parse-markdown";
 
 const DEFAULT_MARKDOWN = `- Taro Yamada (CEO)
-  - Jiro Suzuki (CTO)
-    - Hanako Sato (Tech Lead)
-      - Ken Ito (Senior Engineer)
-      - Mika Ogawa (Engineer)
-      - Yuta Kimura (Engineer)
-    - Ryo Nakamura (Tech Lead)
-      - Ai Yoshida (Engineer)
-      - Sota Fujita (Engineer)
-    - Emi Takahashi (Designer)
-  - Saburo Kato (CFO)
-    - Yuki Watanabe (Accounting Manager)
-      - Naomi Abe (Accountant)
-      - Koji Mori (Accountant)
-    - Tomoko Inoue (Finance)
-  - Kenji Hayashi (COO)
-    - Mari Shimizu (HR Manager)
-      - Rina Kobayashi (HR)
-      - Daiki Saito (HR)
-    - Shota Yamamoto (Sales Manager)
-      - Ayumi Endo (Sales)
-      - Ryota Matsuda (Sales)
-      - Nana Okada (Sales)`;
+  - **Engineering**
+    - Jiro Suzuki (CTO)
+      - Hanako Sato (Tech Lead)
+        - Ken Ito (Senior Engineer)
+        - Mika Ogawa (Engineer)
+        - Yuta Kimura (Engineer)
+      - Ryo Nakamura (Tech Lead)
+        - Ai Yoshida (Engineer)
+        - Sota Fujita (Engineer)
+      - Emi Takahashi (Designer)
+  - **Finance**
+    - Saburo Kato (CFO)
+      - Yuki Watanabe (Accounting Manager)
+        - Naomi Abe (Accountant)
+        - Koji Mori (Accountant)
+      - Tomoko Inoue (Finance)
+  - **Operations**
+    - Kenji Hayashi (COO)
+      - Mari Shimizu (HR Manager)
+        - Rina Kobayashi (HR)
+        - Daiki Saito (HR)
+      - Shota Yamamoto (Sales Manager)
+        - Ayumi Endo (Sales)
+        - Ryota Matsuda (Sales)
+        - Nana Okada (Sales)`;
 
 export default function Home(): React.ReactNode {
   const t = useTranslations("HomePage");
