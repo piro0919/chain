@@ -1,0 +1,72 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "assignees": [],
+  "automerge": true,
+  "dependencyDashboard": true,
+  "extends": ["config:recommended", ":timezone(Asia/Tokyo)"],
+  "lockFileMaintenance": {
+    "enabled": true,
+    "schedule": ["before 5am on monday"]
+  },
+  "packageRules": [
+    {
+      "automerge": true,
+      "groupName": "all non-major dependencies",
+      "groupSlug": "all-minor-patch",
+      "matchUpdateTypes": ["minor", "patch", "pin", "digest"]
+    },
+    {
+      "automerge": false,
+      "groupName": "major updates",
+      "labels": ["dependencies", "major-update"],
+      "matchUpdateTypes": ["major"]
+    },
+    {
+      "addLabels": ["breaking-change"],
+      "automerge": false,
+      "groupName": "Next.js major updates",
+      "labels": ["dependencies", "nextjs", "major-update"],
+      "matchPackageNames": ["next", "@next/**"],
+      "matchUpdateTypes": ["major"]
+    },
+    {
+      "addLabels": ["breaking-change"],
+      "automerge": false,
+      "groupName": "React major updates",
+      "labels": ["dependencies", "react", "major-update"],
+      "matchPackageNames": [
+        "react",
+        "react-dom",
+        "@types/react",
+        "@types/react-dom"
+      ],
+      "matchUpdateTypes": ["major"]
+    },
+    {
+      "automerge": false,
+      "groupName": "TypeScript major updates",
+      "labels": ["dependencies", "typescript", "major-update"],
+      "matchPackageNames": ["typescript"],
+      "matchUpdateTypes": ["major"]
+    },
+    {
+      "addLabels": ["breaking-change"],
+      "automerge": false,
+      "groupName": "Tailwind CSS major updates",
+      "labels": ["dependencies", "tailwind", "major-update"],
+      "matchPackageNames": ["tailwindcss", "@tailwindcss/**"],
+      "matchUpdateTypes": ["major"]
+    },
+    {
+      "automerge": false,
+      "groupName": "Biome major updates",
+      "labels": ["dependencies", "biome", "major-update"],
+      "matchPackageNames": ["@biomejs/biome"],
+      "matchUpdateTypes": ["major"]
+    }
+  ],
+  "platformAutomerge": true,
+  "rangeStrategy": "bump",
+  "reviewers": [],
+  "schedule": ["every weekend"]
+}

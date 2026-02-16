@@ -2,25 +2,50 @@
   "name": "chain",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": ">=20.0.0"
+  },
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev --turbopack",
     "build": "next build",
+    "postbuild": "next-sitemap",
     "start": "next start",
-    "lint": "biome check",
-    "format": "biome format --write"
+    "lint": "biome check src/",
+    "lint:fix": "biome check --write src/",
+    "format": "biome format --write .",
+    "format:check": "biome format .",
+    "typecheck": "tsc --noEmit",
+    "secretlint": "secretlint '**/*'",
+    "knip": "knip"
   },
   "dependencies": {
     "next": "16.1.4",
+    "next-intl": "^4.1.0",
     "react": "19.2.3",
+    "react-d3-tree": "3.6.6",
     "react-dom": "19.2.3"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "lefthook"
+    ]
   },
   "devDependencies": {
     "@biomejs/biome": "2.2.0",
+    "@commitlint/cli": "20.3.0",
+    "@commitlint/config-conventional": "20.3.0",
+    "@secretlint/secretlint-rule-preset-recommend": "11.2.5",
     "@tailwindcss/postcss": "^4",
+    "@total-typescript/ts-reset": "0.6.1",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "babel-plugin-react-compiler": "1.0.0",
+    "better-typescript-lib": "2.12.0",
+    "knip": "5.82.0",
+    "lefthook": "2.0.13",
+    "next-sitemap": "4.2.3",
+    "secretlint": "11.2.5",
     "tailwindcss": "^4",
     "typescript": "^5"
   }

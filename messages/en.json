@@ -1,0 +1,26 @@
+{
+  "Metadata": {
+    "title": "Chain - Org Chart Generator",
+    "description": "Create organization charts from markdown"
+  },
+  "Common": {
+    "loading": "Loading..."
+  },
+  "HomePage": {
+    "title": "Chain",
+    "subtitle": "Org Chart Generator",
+    "editorPlaceholder": "Enter your organization structure in markdown format:\n\n- CEO\n  - CTO\n    - Engineer A\n    - Engineer B\n  - CFO\n    - Accountant",
+    "preview": "Preview",
+    "exportPng": "Export PNG",
+    "exportSvg": "Export SVG",
+    "zoomIn": "Zoom In",
+    "zoomOut": "Zoom Out",
+    "zoomReset": "Reset",
+    "fitToView": "Fit to View",
+    "load": "Load",
+    "save": "Save",
+    "collapseEditor": "Collapse Editor",
+    "expandEditor": "Expand Editor",
+    "emptyChart": "Enter markdown to see the org chart"
+  }
+}
