@@ -2,8 +2,6 @@
 
 > Markdown to org chart generator — online tool.
 
-マークダウンから組織図を作成できるオンラインツール。
-
 [🔗 Live Site](https://chain.kkweb.io)
 
 ## ✨ Features
