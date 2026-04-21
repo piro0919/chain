@@ -1,49 +1,52 @@
 # Chain
 
-マークダウンから組織図を作成できるオンラインツール
+> Markdown to org chart generator — online tool.
 
-## Tech Stack
+マークダウンから組織図を作成できるオンラインツール。
+
+[🔗 Live Site](https://chain.kkweb.io)
+
+## ✨ Features
+
+- 📝 Paste Markdown and instantly render an org chart
+- 🔄 Live preview as you type
+- 📱 Responsive layout
+- 💾 Export to image
+
+## 🛠 Tech Stack
 
 - **Framework**: Next.js 16 (App Router, Turbopack)
-- **UI**: Tailwind CSS v4
+- **UI**: Tailwind CSS v4 + shadcn/ui
 - **Language**: TypeScript
 - **Linter/Formatter**: Biome
 
-## Getting Started
+## 🚀 Getting Started
 
 ```bash
-# Install dependencies
 pnpm install
-
-# Start development server
 pnpm dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser.
 
-## Scripts
+## 📂 Project Structure
+
+```text
+src/
+├── app/         # App Router pages
+├── components/  # Shared components (shadcn/ui)
+└── lib/         # Utilities
+```
+
+## 📋 Scripts
 
 | Command          | Description               |
 | ---------------- | ------------------------- |
 | `pnpm dev`       | Start development server  |
 | `pnpm build`     | Production build          |
-| `pnpm start`     | Start production server   |
 | `pnpm lint`      | Run Biome linter          |
-| `pnpm lint:fix`  | Run Biome with auto-fix   |
-| `pnpm format`    | Format code with Biome    |
 | `pnpm typecheck` | TypeScript type check     |
-| `pnpm knip`      | Find unused code          |
 
-## Project Structure
+## 📄 License
 
-```text
-src/
-├── app/              # App Router pages
-├── components/       # Shared components
-│   └── ui/           # shadcn/ui components
-└── lib/              # Utilities
-```
-
-## License
-
-Private
+MIT
