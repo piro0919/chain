@@ -31,7 +31,7 @@
     ]
   },
   "devDependencies": {
-    "@biomejs/biome": "2.5.0",
+    "@biomejs/biome": "2.5.1",
     "@commitlint/cli": "20.5.3",
     "@commitlint/config-conventional": "20.5.3",
     "@secretlint/secretlint-rule-preset-recommend": "11.7.1",
