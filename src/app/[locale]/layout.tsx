@@ -30,6 +30,7 @@ export async function generateMetadata({
   const t = await getTranslations({ locale, namespace: "Metadata" });
 
   return {
+    metadataBase: new URL("https://chain.kkweb.io"),
     description: t("description"),
     title: {
       default: t("title"),
