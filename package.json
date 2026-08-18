@@ -16,9 +16,11 @@
     "format:check": "biome format .",
     "typecheck": "tsc --noEmit",
     "secretlint": "secretlint '**/*'",
-    "knip": "knip"
+    "knip": "knip",
+    "lighthouse": "pnpm build && lhci autorun"
   },
   "dependencies": {
+    "@vercel/analytics": "2.0.1",
     "next": "16.3.1",
     "next-intl": "^4.13.6",
     "react": "19.2.8",
@@ -34,6 +36,7 @@
     "@biomejs/biome": "2.5.8",
     "@commitlint/cli": "20.5.3",
     "@commitlint/config-conventional": "20.5.3",
+    "@lhci/cli": "0.15.1",
     "@secretlint/secretlint-rule-preset-recommend": "11.7.1",
     "@tailwindcss/postcss": "^4.3.3",
     "@total-typescript/ts-reset": "0.6.1",
