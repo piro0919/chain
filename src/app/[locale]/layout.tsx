@@ -32,7 +32,19 @@ export async function generateMetadata({
 
   return {
     metadataBase: new URL("https://chain.kkweb.io"),
+    // localePrefix が as-needed なので、既定ロケールだけ接頭辞が付かない。
+    // canonical と hreflang が無いと en と ja が重複ページ扱いになる。
+    alternates: {
+      canonical: locale === routing.defaultLocale ? "/" : `/${locale}`,
+      languages: Object.fromEntries(
+        routing.locales.map((one) => [one, one === routing.defaultLocale ? "/" : `/${one}`]),
+      ),
+    },
     description: t("description"),
+    openGraph: {
+      type: "website",
+      url: locale === routing.defaultLocale ? "/" : `/${locale}`,
+    },
     title: {
       default: t("title"),
       template: `%s | ${t("title")}`,
