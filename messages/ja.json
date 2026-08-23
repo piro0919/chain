@@ -22,5 +22,8 @@
     "collapseEditor": "エディタを閉じる",
     "expandEditor": "エディタを開く",
     "emptyChart": "マークダウンを入力して組織図を表示"
+  },
+  "OgImage": {
+    "tagline": "マークダウンから組織図を作る"
   }
 }

@@ -6,6 +6,7 @@ import { NextIntlClientProvider } from "next-intl";
 import { getMessages, getTranslations } from "next-intl/server";
 import type { ReactNode } from "react";
 import { routing } from "@/i18n/routing";
+import { languageAlternates, localePath, ogAlternateLocales, ogLocale } from "@/i18n/urls";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -35,15 +36,15 @@ export async function generateMetadata({
     // localePrefix が as-needed なので、既定ロケールだけ接頭辞が付かない。
     // canonical と hreflang が無いと en と ja が重複ページ扱いになる。
     alternates: {
-      canonical: locale === routing.defaultLocale ? "/" : `/${locale}`,
-      languages: Object.fromEntries(
-        routing.locales.map((one) => [one, one === routing.defaultLocale ? "/" : `/${one}`]),
-      ),
+      canonical: localePath(locale),
+      languages: languageAlternates(),
     },
     description: t("description"),
     openGraph: {
+      locale: ogLocale(locale),
+      alternateLocale: ogAlternateLocales(locale),
       type: "website",
-      url: locale === routing.defaultLocale ? "/" : `/${locale}`,
+      url: localePath(locale),
     },
     title: {
       default: t("title"),

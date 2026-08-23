@@ -22,5 +22,8 @@
     "collapseEditor": "Collapse Editor",
     "expandEditor": "Expand Editor",
     "emptyChart": "Enter markdown to see the org chart"
+  },
+  "OgImage": {
+    "tagline": "Create organization charts from markdown."
   }
 }
