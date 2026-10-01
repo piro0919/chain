@@ -16,6 +16,7 @@
     "typecheck": "tsc --noEmit",
     "secretlint": "secretlint '**/*'",
     "knip": "knip",
+    "test": "node --test 'src/**/*.test.ts'",
     "lighthouse": "pnpm build && lhci autorun"
   },
   "dependencies": {

@@ -5,6 +5,17 @@ export type OrgNode = {
   position?: string;
 };
 
+// Tabs advance to the next multiple of this width, the CommonMark tab stop.
+const TAB_WIDTH = 4;
+
+function measureIndent(whitespace: string): number {
+  let column = 0;
+  for (const char of whitespace) {
+    column = char === "\t" ? column + TAB_WIDTH - (column % TAB_WIDTH) : column + 1;
+  }
+  return column;
+}
+
 export function parseMarkdown(markdown: string): OrgNode[] {
   const lines = markdown.split("\n").filter((line) => line.trim() !== "");
   const root: OrgNode[] = [];
@@ -14,7 +25,7 @@ export function parseMarkdown(markdown: string): OrgNode[] {
     const match = line.match(/^(\s*)[-*]\s+(.+)$/);
     if (!match) continue;
 
-    const indent = match[1].length;
+    const indent = measureIndent(match[1]);
     const content = match[2].trim();
 
     // Parse bold text as department marker: **Department**
