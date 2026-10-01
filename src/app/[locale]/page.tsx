@@ -1,7 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { MarkdownEditor } from "@/components/markdown-editor";
 import type { OrgChartHandle } from "@/components/org-chart";
 import { OrgChart } from "@/components/org-chart";
@@ -34,13 +34,40 @@ const DEFAULT_MARKDOWN = `- Taro Yamada (CEO)
         - Ryota Matsuda (Sales)
         - Nana Okada (Sales)`;
 
+const STORAGE_KEY = "chain:markdown";
+const SAVE_DELAY_MS = 500;
+
 export default function Home(): React.ReactNode {
   const t = useTranslations("HomePage");
   const [markdown, setMarkdown] = useState(DEFAULT_MARKDOWN);
+  const [isRestored, setIsRestored] = useState(false);
   const [isEditorCollapsed, setIsEditorCollapsed] = useState(false);
   const orgChartRef = useRef<OrgChartHandle>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const nodes = parseMarkdown(markdown);
+
+  // Restore after mount so the server render and the first client render match.
+  useEffect(() => {
+    try {
+      const saved = window.localStorage.getItem(STORAGE_KEY);
+      if (saved !== null) setMarkdown(saved);
+    } catch {
+      // Storage is unavailable (private mode, blocked site data); keep the sample.
+    }
+    setIsRestored(true);
+  }, []);
+
+  useEffect(() => {
+    if (!isRestored) return;
+    const timer = window.setTimeout(() => {
+      try {
+        window.localStorage.setItem(STORAGE_KEY, markdown);
+      } catch {
+        // Storage is full or unavailable; editing still works for this session.
+      }
+    }, SAVE_DELAY_MS);
+    return () => window.clearTimeout(timer);
+  }, [isRestored, markdown]);
 
   const handleSave = useCallback(() => {
     const blob = new Blob([markdown], { type: "text/markdown;charset=utf-8" });
