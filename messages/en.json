@@ -21,7 +21,9 @@
     "save": "Save",
     "collapseEditor": "Collapse Editor",
     "expandEditor": "Expand Editor",
-    "emptyChart": "Enter markdown to see the org chart"
+    "emptyChart": "Enter markdown to see the org chart",
+    "exportError": "Export failed. Please try again.",
+    "dismiss": "Dismiss"
   },
   "OgImage": {
     "tagline": "Create organization charts from markdown."

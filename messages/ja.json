@@ -21,7 +21,9 @@
     "save": "保存",
     "collapseEditor": "エディタを閉じる",
     "expandEditor": "エディタを開く",
-    "emptyChart": "マークダウンを入力して組織図を表示"
+    "emptyChart": "マークダウンを入力して組織図を表示",
+    "exportError": "書き出しに失敗しました。もう一度お試しください。",
+    "dismiss": "閉じる"
   },
   "OgImage": {
     "tagline": "マークダウンから組織図を作る"

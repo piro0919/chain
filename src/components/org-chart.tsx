@@ -216,6 +216,7 @@ export const OrgChart = forwardRef<OrgChartHandle, OrgChartProps>(function OrgCh
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
   const [zoom, setZoom] = useState(1);
   const [translate, setTranslate] = useState({ x: 0, y: 60 });
+  const [exportFailed, setExportFailed] = useState(false);
   const departments = useMemo(() => collectDepartments(nodes), [nodes]);
   const treeData = useMemo(() => convertToTreeData(nodes, departments), [nodes, departments]);
   const renderNodeCallback = useMemo(() => createRenderNode(departments), [departments]);
@@ -324,8 +325,12 @@ export const OrgChart = forwardRef<OrgChartHandle, OrgChartProps>(function OrgCh
     () => ({
       fitToView: handleFitToView,
       exportPng: async () => {
+        setExportFailed(false);
         const result = prepareSvgForExport();
-        if (!result) return;
+        if (!result) {
+          setExportFailed(true);
+          return;
+        }
 
         const { svg: clonedSvg, width, height } = result;
 
@@ -336,22 +341,27 @@ export const OrgChart = forwardRef<OrgChartHandle, OrgChartProps>(function OrgCh
 
           const img = new Image();
           img.onload = () => {
-            const scale = 2;
-            const canvas = document.createElement("canvas");
-            canvas.width = width * scale;
-            canvas.height = height * scale;
-            const ctx = canvas.getContext("2d");
-            if (!ctx) return;
+            try {
+              const scale = 2;
+              const canvas = document.createElement("canvas");
+              canvas.width = width * scale;
+              canvas.height = height * scale;
+              const ctx = canvas.getContext("2d");
+              if (!ctx) throw new Error("Canvas 2D context is unavailable");
 
-            ctx.fillStyle = "#ffffff";
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            ctx.scale(scale, scale);
-            ctx.drawImage(img, 0, 0, width, height);
+              ctx.fillStyle = "#ffffff";
+              ctx.fillRect(0, 0, canvas.width, canvas.height);
+              ctx.scale(scale, scale);
+              ctx.drawImage(img, 0, 0, width, height);
 
-            const link = document.createElement("a");
-            link.download = "org-chart.png";
-            link.href = canvas.toDataURL("image/png");
-            link.click();
+              const link = document.createElement("a");
+              link.download = "org-chart.png";
+              // Throws if the browser treats the canvas as tainted.
+              link.href = canvas.toDataURL("image/png");
+              link.click();
+            } catch {
+              setExportFailed(true);
+            }
           };
           img.onerror = () => {
             // Fallback: download as SVG if PNG fails
@@ -365,12 +375,16 @@ export const OrgChart = forwardRef<OrgChartHandle, OrgChartProps>(function OrgCh
           };
           img.src = dataUrl;
         } catch {
-          // Export failed
+          setExportFailed(true);
         }
       },
       exportSvg: async () => {
+        setExportFailed(false);
         const result = prepareSvgForExport();
-        if (!result) return;
+        if (!result) {
+          setExportFailed(true);
+          return;
+        }
 
         try {
           const svgData = new XMLSerializer().serializeToString(result.svg);
@@ -384,16 +398,34 @@ export const OrgChart = forwardRef<OrgChartHandle, OrgChartProps>(function OrgCh
 
           URL.revokeObjectURL(url);
         } catch {
-          // Export failed
+          setExportFailed(true);
         }
       },
     }),
     [prepareSvgForExport, handleFitToView],
   );
 
+  const exportError = exportFailed ? (
+    <div
+      role="alert"
+      className="absolute left-4 top-4 z-10 flex items-center gap-2 rounded border border-red-200 bg-red-50 px-3 py-1.5 text-sm text-red-700"
+    >
+      <span>{t("exportError")}</span>
+      <button
+        type="button"
+        onClick={() => setExportFailed(false)}
+        className="text-red-400 hover:text-red-600"
+        aria-label={t("dismiss")}
+      >
+        ×
+      </button>
+    </div>
+  ) : null;
+
   if (!treeData) {
     return (
-      <div className="flex h-full items-center justify-center text-zinc-500">
+      <div className="relative flex h-full items-center justify-center text-zinc-500">
+        {exportError}
         <p>{t("emptyChart")}</p>
       </div>
     );
@@ -401,6 +433,7 @@ export const OrgChart = forwardRef<OrgChartHandle, OrgChartProps>(function OrgCh
 
   return (
     <div className="relative h-full w-full">
+      {exportError}
       <div className="absolute right-4 top-4 z-10 flex gap-1">
         <button
           type="button"
